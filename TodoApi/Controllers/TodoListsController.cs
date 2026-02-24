@@ -83,6 +83,35 @@ namespace TodoApi.Controllers
 
             return NoContent();
         }
+        
+
+        // POST: api/todolists
+        // To protect from over-posting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<TodoList>> CreateTodoItem(CreateTodoItem pTodoItem)
+        {
+            var todoItem = new TodoList { Name = pTodoItem.Name };
+            _context.TodoList.Add(todoItem);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetTodoList", new { id = todoItem.Id }, todoItem);
+        }
+
+        // DELETE: api/todolists/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteTodoItem(long id)
+        {
+            var todoItem = await _context.TodoList.FindAsync(id);
+            if (todoItem == null)
+            {
+                return NotFound();
+            }
+
+            _context.TodoList.Remove(todoItem);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         private bool TodoListExists(long id)
         {
